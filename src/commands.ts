@@ -54,7 +54,7 @@ const customCommands = {
             return cy.currentUser<U>(guard).then(user => {
                 cy.wrap(user).as('user');
 
-                return user;
+                return cy.get('@user') as any as Cypress.Chainable<U>;
             });
         }
 
