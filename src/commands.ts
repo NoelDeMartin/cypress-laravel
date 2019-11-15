@@ -12,8 +12,10 @@ const customCommands = {
         return cy.request('/_cypress/csrf_token').its('body');
     },
 
-    currentUser(): Cypress.Chainable<any> {
-        return cy.request('/_cypress/current_user').its('body');
+    currentUser<U extends User = any>(guard?: string): Cypress.Chainable<U> {
+        guard = guard || '';
+
+        return cy.request(`/_cypress/current_user/${guard}`).its('body');
     },
 
     create<M = any>(
@@ -45,9 +47,11 @@ const customCommands = {
 
     login<U extends User = any>(userId?: number, guard?: string): Cypress.Chainable<U> {
         if (typeof userId !== 'undefined') {
+            guard = guard || '';
+
             cy.request(`/_dusk/login/${userId}/${guard}`);
 
-            return cy.currentUser().then(user => {
+            return cy.currentUser<U>(guard).then(user => {
                 cy.wrap(user).as('user');
 
                 return user;
