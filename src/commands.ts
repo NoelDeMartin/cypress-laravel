@@ -23,7 +23,7 @@ const customCommands = {
         quantityOrAttributes?: number | any,
         attributes?: any,
     ): Cypress.Chainable<M> {
-        let quantity = 1;
+        let quantity;
 
         if (typeof quantityOrAttributes === 'object')
             attributes = quantityOrAttributes;
