@@ -1,7 +1,11 @@
 /// <reference types="cypress" />
 
-interface User {
+interface Model {
     id: string;
+}
+
+interface User extends Model {
+    email: string;
 }
 
 declare global {
@@ -10,7 +14,7 @@ declare global {
 
         interface Chainable<Subject> {
 
-            create<M = any>(
+            create<M extends Model = any>(
                 modelClass: string,
                 quantityOrAttributes?: number | any,
                 attributes?: any,

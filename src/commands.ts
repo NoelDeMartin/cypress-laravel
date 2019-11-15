@@ -1,5 +1,9 @@
-interface User {
+interface Model {
     id: string;
+}
+
+interface User extends Model {
+    email: string;
 }
 
 const customCommands = {
@@ -18,7 +22,7 @@ const customCommands = {
         return cy.request(`/_cypress/current_user/${guard}`).its('body');
     },
 
-    create<M = any>(
+    create<M extends Model = any>(
         modelClass: string,
         quantityOrAttributes?: number | any,
         attributes?: any,
