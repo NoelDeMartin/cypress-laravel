@@ -1,3 +1,7 @@
+interface User {
+    id: string;
+}
+
 const customCommands = {
 
     setup(): void {
@@ -8,10 +12,14 @@ const customCommands = {
         return cy.request('/_cypress/csrf_token').its('body');
     },
 
+    currentUser(): Cypress.Chainable<any> {
+        return cy.request('/_cypress/current_user').its('body');
+    },
+
     create<M = any>(
         modelClass: string,
-        quantityOrAttributes?: object | number,
-        attributes?: object,
+        quantityOrAttributes?: number | any,
+        attributes?: any,
     ): Cypress.Chainable<M> {
         let quantity = 1;
 
@@ -33,6 +41,20 @@ const customCommands = {
             })
                 .its('body')
         );
+    },
+
+    login<U extends User = any>(userId?: number, guard?: string): Cypress.Chainable<U> {
+        if (typeof userId !== 'undefined') {
+            cy.request(`/_dusk/login/${userId}/${guard}`);
+
+            return cy.currentUser().then(user => {
+                cy.wrap(user).as('user');
+
+                return user;
+            });
+        }
+
+        return cy.create('User').then(user => cy.login(user.id, guard));
     },
 
 };
