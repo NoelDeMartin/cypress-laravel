@@ -10,6 +10,14 @@ Install the package using npm:
 npm install cypress-laravel --save-dev
 ```
 
+And add the following at the beginning of your setup file at `cypress/support/index.js`:
+
+```js
+import 'cypress-laravel';
+
+// ...
+```
+
 ## Commands
 
 This package includes [typescript definitions](types/index.d.ts), check them out to learn about the full API.
