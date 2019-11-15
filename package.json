@@ -1,5 +1,5 @@
 {
-  "name": "laravel-cypress",
+  "name": "cypress-laravel",
   "version": "0.0.1",
   "description": "Cypress plugin to test Laravel applications",
   "main": "dist/cypress-laravel.common.js",
