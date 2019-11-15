@@ -2,6 +2,14 @@
 
 This Cypress plugin exposes commands to test Laravel applications. In order to use it, the Laravel app must have the [laravel-cypress](https://github.com/NoelDeMartin/laravel-cypress) package installed.
 
+## Installation
+
+Install the package using npm:
+
+```
+npm install cypress-laravel --save-dev
+```
+
 ## Commands
 
 This package includes [typescript definitions](types/index.d.ts), check them out to learn about the full API.
