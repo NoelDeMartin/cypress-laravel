@@ -35,17 +35,21 @@ cy.create('App\\User', 3, { is_admin: false })
 
 Quantity and attributes are optional arguments.
 
-### login
+### login / logut
 
-This command requires [Laravel Dusk](https://laravel.com/docs/6.x/dusk) to be installed, and it is the equivalent of Dusk's login functionality. Keep in mind that it isn't necessary to have installed dusk with the `dusk:install` command, having the composer dependency installed suffices.
+Login or logout a user with Laravel's [authentication](https://laravel.com/docs/6.x/authentication). User id and authentication guard can be specified.
+
+The user object will also be wrapped as `user`, so it can be retrieved later on calling `cy.get('@user')`.
 
 ```js
-cy.login().then(users => {
+cy.login().then(user => {
     // ...
 });
-```
 
-The user object will be wrapped as `user`, so it can be retrieved later on calling `cy.get('@user')`.
+// ...
+
+cy.logout();
+```
 
 ## Sandbox project
 

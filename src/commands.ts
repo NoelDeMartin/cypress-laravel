@@ -53,7 +53,7 @@ const customCommands = {
         if (typeof userId !== 'undefined') {
             guard = guard || '';
 
-            cy.request(`/_dusk/login/${userId}/${guard}`);
+            cy.request(`/_cypress/login/${userId}/${guard}`);
 
             return cy.currentUser<U>(guard).then(user => {
                 cy.wrap(user).as('user');
@@ -63,6 +63,12 @@ const customCommands = {
         }
 
         return cy.create('User').then(user => cy.login(user.id, guard));
+    },
+
+    logout(guard?: string): void {
+        guard = guard || '';
+
+        cy.request(`/_cypress/logout/${guard}`);
     },
 
 };

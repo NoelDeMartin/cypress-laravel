@@ -22,6 +22,8 @@ declare global {
 
             login<U extends User = any>(userId?: number, guard?: string): Cypress.Chainable<U>;
 
+            logout(guard?: string): void;
+
         }
 
     }
