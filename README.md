@@ -2,6 +2,8 @@
 
 This Cypress plugin exposes commands to test Laravel applications. In order to use it, the Laravel app must have the [laravel-cypress](https://github.com/NoelDeMartin/laravel-cypress) package installed.
 
+You can read the following article to learn how this works: [Testing Laravel Applications Using Cypress](https://noeldemartin.com/blog/testing-laravel-applications-using-cypress).
+
 ## Installation
 
 Install the package using npm:
@@ -35,7 +37,7 @@ cy.create('App\\User', 3, { is_admin: false })
 
 Quantity and attributes are optional arguments.
 
-### login / logut
+### login / logout
 
 Login or logout a user with Laravel's [authentication](https://laravel.com/docs/6.x/authentication). User id and authentication guard can be specified.
 
