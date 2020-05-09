@@ -7,3 +7,7 @@ export function useCypressLaravel() {
 
     beforeEach(() => cy.setup());
 }
+
+export function useDatabaseMigrations() {
+    beforeEach(() => cy.artisan('migrate:fresh'));
+}

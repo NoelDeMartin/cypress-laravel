@@ -71,6 +71,20 @@ const customCommands = {
         cy.request(`/_cypress/logout/${guard}`);
     },
 
+    artisan(command: string, parameters?: object): void {
+        cy.csrfToken().then(
+            csrfToken => cy.request({
+                url: '/_cypress/call_artisan',
+                method: 'POST',
+                body: {
+                    _token: csrfToken,
+                    command,
+                    parameters,
+                },
+            }),
+        );
+    },
+
 };
 
 export default customCommands;

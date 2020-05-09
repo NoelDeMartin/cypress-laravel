@@ -24,6 +24,8 @@ declare global {
 
             logout(guard?: string): void;
 
+            artisan(command: string, parameters?: object): void;
+
         }
 
     }
@@ -31,3 +33,5 @@ declare global {
 }
 
 export function useCypressLaravel(): void;
+
+export function useDatabaseMigrations(): void;

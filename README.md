@@ -1,6 +1,6 @@
 # Cypress Laravel
 
-This Cypress plugin exposes commands to test Laravel applications. In order to use it, the Laravel app must have the [laravel-cypress](https://github.com/NoelDeMartin/laravel-cypress) package installed.
+This Cypress plugin exposes commands and functions to test Laravel applications. In order to use it, the Laravel app must have the [laravel-cypress](https://github.com/NoelDeMartin/laravel-cypress) package installed.
 
 You can read the following article to learn how this works: [Testing Laravel Applications Using Cypress](https://noeldemartin.com/blog/testing-laravel-applications-using-cypress).
 
@@ -53,6 +53,32 @@ cy.login().then(user => {
 // ...
 
 cy.logout();
+```
+
+### artisan
+
+Call an [artisan command](https://laravel.com/docs/7.x/artisan).
+
+```js
+cy.artisan('migrate:fresh');
+```
+
+## Functions
+
+### useDatabaseMigrations
+
+This function can be used in tests that interact with the database. It will reset the database before each test is executed.
+
+```js
+describe('Feature', () => {
+
+    useDatabaseMigrations();
+
+    it('should do something with the database', () => {
+        //...
+    });
+
+})
 ```
 
 ## Sandbox project
