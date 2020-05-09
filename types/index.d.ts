@@ -29,3 +29,5 @@ declare global {
     }
 
 }
+
+export function useCypressLaravel(): void;

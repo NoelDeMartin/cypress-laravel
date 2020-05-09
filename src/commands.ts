@@ -73,8 +73,4 @@ const customCommands = {
 
 };
 
-for (const command in customCommands) {
-    Cypress.Commands.add(command, (customCommands as any)[command]);
-}
-
 export default customCommands;
