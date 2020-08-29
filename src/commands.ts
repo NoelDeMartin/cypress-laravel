@@ -6,20 +6,24 @@ interface User extends Model {
     email: string;
 }
 
+const laravelAppBaseUrl = () => {
+    return Cypress.env("CYPRESS_LARAVEL_APP_BASE_URL") ?? ""
+}
+
 const customCommands = {
 
     setup(): void {
-        cy.request('/_cypress/setup');
+        cy.request(`${laravelAppBaseUrl()}/_cypress/setup`);
     },
 
     csrfToken(): Cypress.Chainable<string> {
-        return cy.request('/_cypress/csrf_token').its('body');
+        return cy.request(`${laravelAppBaseUrl()}/_cypress/csrf_token`).its('body');
     },
 
     currentUser<U extends User = any>(guard?: string): Cypress.Chainable<U> {
         guard = guard || '';
 
-        return cy.request(`/_cypress/current_user/${guard}`).its('body');
+        return cy.request(`${laravelAppBaseUrl()}/_cypress/current_user/${guard}`).its('body');
     },
 
     create<M extends Model = any>(
@@ -36,7 +40,7 @@ const customCommands = {
 
         return cy.csrfToken().then(
             csrfToken => cy.request({
-                url: '/_cypress/create_models',
+                url: `${laravelAppBaseUrl()}/_cypress/create_models`,
                 method: 'POST',
                 body: {
                     _token: csrfToken,
@@ -53,7 +57,7 @@ const customCommands = {
         if (typeof userId !== 'undefined') {
             guard = guard || '';
 
-            cy.request(`/_cypress/login/${userId}/${guard}`);
+            cy.request(`${laravelAppBaseUrl()}/_cypress/login/${userId}/${guard}`);
 
             return cy.currentUser<U>(guard).then(user => {
                 cy.wrap(user).as('user');
@@ -68,21 +72,21 @@ const customCommands = {
     logout(guard?: string): void {
         guard = guard || '';
 
-        cy.request(`/_cypress/logout/${guard}`);
+        cy.request(`${laravelAppBaseUrl()}/_cypress/logout/${guard}`);
     },
 
     artisan(command: string, parameters?: object): void {
-        cy.csrfToken().then(
-            csrfToken => cy.request({
-                url: '/_cypress/call_artisan',
-                method: 'POST',
-                body: {
-                    _token: csrfToken,
-                    command,
-                    parameters,
-                },
-            }),
-        );
+        cy.csrfToken().then((csrfToken) =>
+          cy.request({
+            url: `${laravelAppBaseUrl()}/_cypress/call_artisan`,
+            method: "POST",
+            body: {
+              _token: csrfToken,
+              command,
+              parameters,
+            },
+          })
+        )
     },
 
 };
