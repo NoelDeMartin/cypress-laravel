@@ -6,38 +6,41 @@ interface User extends Model {
     email: string;
 }
 
+type LaravelCypressRequestOptions = Omit<Cypress.RequestOptions, 'url'>;
+
 const customCommands = {
 
-    laravelCypressRequest(arg: any): Cypress.Chainable<Cypress.Response> {
-        const options: Partial<Cypress.LaravelCypressRequestOptions> =
-            typeof arg === 'string'
-                ? { path: arg }
-                : arg;
+    laravelCypressRequest(path: string, options: Partial<LaravelCypressRequestOptions> = {}): Cypress.Chainable<Cypress.Response> {
         const laravelUrl = Cypress.env('LARAVEL_URL') ?? Cypress.env('laravelUrl') ?? '';
-        const { path, ...requestOptions } = options;
 
         return cy.request({
             url: `${laravelUrl}/_cypress/${path}`,
-            ...requestOptions,
+            ...options,
         });
     },
 
     setup(): void {
-        cy.laravelCypressRequest('setup');
+        Cypress.log({ name: 'setup' });
+
+        cy.laravelCypressRequest('setup', { log: false });
     },
 
     csrfToken(): Cypress.Chainable<string> {
-        return cy.laravelCypressRequest('csrf_token').its('body');
+        return cy
+            .laravelCypressRequest('csrf_token', { log: false })
+            .its('body', { log: false });
     },
 
     currentUser<U extends User = any>(guard?: string): Cypress.Chainable<U> {
         guard = guard || '';
 
-        return cy.laravelCypressRequest(`current_user/${guard}`).its('body');
+        return cy
+            .laravelCypressRequest(`current_user/${guard}`, { log: false })
+            .its('body', { log: false });
     },
 
     create<M extends Model = any>(
-        modelClass: string,
+        model: string,
         quantityOrAttributes?: number | any,
         attributes?: any,
     ): Cypress.Chainable<M> {
@@ -48,55 +51,95 @@ const customCommands = {
         else if (typeof quantityOrAttributes === 'number')
             quantity = quantityOrAttributes;
 
-        return cy.csrfToken().then(
-            csrfToken => cy.laravelCypressRequest({
-                path: 'create_models',
-                method: 'POST',
-                body: {
-                    _token: csrfToken,
-                    modelClass,
-                    quantity,
-                    attributes,
-                },
-            })
-                .its('body')
-        );
+        return cy
+            .csrfToken()
+            .then(
+                csrfToken => cy
+                    .laravelCypressRequest('create_models', {
+                        method: 'POST',
+                        body: {
+                            _token: csrfToken,
+                            modelClass: model,
+                            quantity,
+                            attributes,
+                        },
+                        log: false,
+                    })
+                    .its('body', { log: false }),
+            )
+            .then(result => {
+                Cypress.log({
+                    name: 'create',
+                    message: [model, quantity, attributes],
+                    consoleProps: () => ({
+                        model,
+                        quantity,
+                        attributes,
+                        yielded: result,
+                    }),
+                });
+
+                return result;
+            });
     },
 
     login<U extends User = any>(userId?: number, guard?: string): Cypress.Chainable<U> {
         if (typeof userId !== 'undefined') {
+            const guardArgument = guard;
+
             guard = guard || '';
 
-            cy.laravelCypressRequest(`login/${userId}/${guard}`);
+            cy.laravelCypressRequest(`login/${userId}/${guard}`, { log: false });
 
-            return cy.currentUser<U>(guard).then(user => {
-                cy.wrap(user).as('user');
+            return cy
+                .currentUser<U>(guard)
+                .then(user => {
+                    Cypress.log({
+                        name: 'login',
+                        message: [userId, guardArgument],
+                        consoleProps: () => ({ userId, guard: guardArgument, yielded: user }),
+                    });
 
-                return cy.get('@user') as any as Cypress.Chainable<U>;
-            });
+                    cy.wrap(user, { log: false }).as('user');
+
+                    return cy.get('@user', { log: false }) as any as Cypress.Chainable<U>;
+                });
         }
 
         return cy.create('User').then(user => cy.login(user.id, guard));
     },
 
     logout(guard?: string): void {
+        Cypress.log({
+            name: 'logout',
+            message: [guard],
+            consoleProps: () => ({ guard }),
+        });
+
         guard = guard || '';
 
-        cy.laravelCypressRequest(`logout/${guard}`);
+        cy.laravelCypressRequest(`logout/${guard}`, { log: false });
     },
 
     artisan(command: string, parameters?: object): void {
-        cy.csrfToken().then((csrfToken) =>
-          cy.laravelCypressRequest({
-            path: 'call_artisan',
-            method: "POST",
-            body: {
-              _token: csrfToken,
-              command,
-              parameters,
-            },
-          })
-        )
+        Cypress.log({
+            name: 'artisan',
+            message: [command, parameters],
+            consoleProps: () => ({ command, parameters })
+        });
+
+        cy.csrfToken().then(
+            csrfToken =>
+                cy.laravelCypressRequest('call_artisan', {
+                    method: 'POST',
+                    body: {
+                        _token: csrfToken,
+                        command,
+                        parameters,
+                    },
+                    log: false,
+                }),
+        );
     },
 
 };

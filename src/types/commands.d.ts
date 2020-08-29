@@ -6,16 +6,21 @@ type CustomCommands = {
     [command in keyof typeof commands]: typeof commands[command];
 };
 
+interface Model {
+    id: string;
+}
+
 declare global {
 
     namespace Cypress {
 
-        type LaravelCypressRequestOptions = Omit<RequestOptions, 'url'> & { path: string };
+        interface Chainable<Subject> extends CustomCommands {
 
-        interface Chainable extends CustomCommands {
+            create<M extends Model = any>(model: string, attributes?: any): Cypress.Chainable<M>;
+            create<M extends Model = any>(model: string, quantity: number, attributes?: any): Cypress.Chainable<M>;
 
-            laravelCypressRequest(options: Partial<LaravelCypressRequestOptions>): Chainable<Response>;
-            laravelCypressRequest(action: string): Chainable<Response>
+            // Added in Cypress 3.8.0, backwards compatible.
+            its<K extends keyof Subject>(propertyName: K, options: { log?: boolean }): Chainable<Subject[K]>
 
         }
 

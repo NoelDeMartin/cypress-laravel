@@ -14,11 +14,8 @@ declare global {
 
         interface Chainable {
 
-            create<M extends Model = any>(
-                modelClass: string,
-                quantityOrAttributes?: number | any,
-                attributes?: any,
-            ): Cypress.Chainable<M>;
+            create<M extends Model = any>(model: string, attributes?: any): Cypress.Chainable<M>;
+            create<M extends Model = any>(model: string, quantity: number, attributes?: any): Cypress.Chainable<M>;
 
             login<U extends User = any>(userId?: number, guard?: string): Cypress.Chainable<U>;
 
