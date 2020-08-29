@@ -6,24 +6,34 @@ interface User extends Model {
     email: string;
 }
 
-const laravelAppBaseUrl = () => {
-    return Cypress.env("CYPRESS_LARAVEL_APP_BASE_URL") ?? ""
-}
-
 const customCommands = {
 
+    laravelCypressRequest(arg: any): Cypress.Chainable<Cypress.Response> {
+        const options: Partial<Cypress.LaravelCypressRequestOptions> =
+            typeof arg === 'string'
+                ? { path: arg }
+                : arg;
+        const laravelUrl = Cypress.env('LARAVEL_URL') ?? Cypress.env('laravelUrl') ?? '';
+        const { path, ...requestOptions } = options;
+
+        return cy.request({
+            url: `${laravelUrl}/_cypress/${path}`,
+            ...requestOptions,
+        });
+    },
+
     setup(): void {
-        cy.request(`${laravelAppBaseUrl()}/_cypress/setup`);
+        cy.laravelCypressRequest('setup');
     },
 
     csrfToken(): Cypress.Chainable<string> {
-        return cy.request(`${laravelAppBaseUrl()}/_cypress/csrf_token`).its('body');
+        return cy.laravelCypressRequest('csrf_token').its('body');
     },
 
     currentUser<U extends User = any>(guard?: string): Cypress.Chainable<U> {
         guard = guard || '';
 
-        return cy.request(`${laravelAppBaseUrl()}/_cypress/current_user/${guard}`).its('body');
+        return cy.laravelCypressRequest(`current_user/${guard}`).its('body');
     },
 
     create<M extends Model = any>(
@@ -39,8 +49,8 @@ const customCommands = {
             quantity = quantityOrAttributes;
 
         return cy.csrfToken().then(
-            csrfToken => cy.request({
-                url: `${laravelAppBaseUrl()}/_cypress/create_models`,
+            csrfToken => cy.laravelCypressRequest({
+                path: 'create_models',
                 method: 'POST',
                 body: {
                     _token: csrfToken,
@@ -57,7 +67,7 @@ const customCommands = {
         if (typeof userId !== 'undefined') {
             guard = guard || '';
 
-            cy.request(`${laravelAppBaseUrl()}/_cypress/login/${userId}/${guard}`);
+            cy.laravelCypressRequest(`login/${userId}/${guard}`);
 
             return cy.currentUser<U>(guard).then(user => {
                 cy.wrap(user).as('user');
@@ -72,13 +82,13 @@ const customCommands = {
     logout(guard?: string): void {
         guard = guard || '';
 
-        cy.request(`${laravelAppBaseUrl()}/_cypress/logout/${guard}`);
+        cy.laravelCypressRequest(`logout/${guard}`);
     },
 
     artisan(command: string, parameters?: object): void {
         cy.csrfToken().then((csrfToken) =>
-          cy.request({
-            url: `${laravelAppBaseUrl()}/_cypress/call_artisan`,
+          cy.laravelCypressRequest({
+            path: 'call_artisan',
             method: "POST",
             body: {
               _token: csrfToken,

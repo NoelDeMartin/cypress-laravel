@@ -2,7 +2,7 @@
 
 import commands from '@/commands';
 
-type CustomCommands<Subject> = {
+type CustomCommands = {
     [command in keyof typeof commands]: typeof commands[command];
 };
 
@@ -10,7 +10,12 @@ declare global {
 
     namespace Cypress {
 
-        interface Chainable<Subject> extends CustomCommands<Subject> {
+        type LaravelCypressRequestOptions = Omit<RequestOptions, 'url'> & { path: string };
+
+        interface Chainable extends CustomCommands {
+
+            laravelCypressRequest(options: Partial<LaravelCypressRequestOptions>): Chainable<Response>;
+            laravelCypressRequest(action: string): Chainable<Response>
 
         }
 

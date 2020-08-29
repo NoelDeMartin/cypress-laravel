@@ -22,6 +22,27 @@ useCypressLaravel();
 // ...
 ```
 
+### Custom Laravel url
+
+By default, the plugin assumes that the frontend under test is being served on the same domain as the laravel application.
+
+If that's not the case, you can specify a different url setting the `env.laravelUrl` property in your `cypress.json` config file:
+
+```json
+{
+    "baseUrl": "http://frontend.test",
+    "env": {
+        "laravelUrl": "http://backend.test"
+    }
+}
+```
+
+You can also override this value by setting the `CYPRESS_LARAVEL_URL` env variable:
+
+```sh
+CYPRESS_LARAVEL_URL=http://backend.test npm run cypress
+```
+
 ## Commands
 
 This package includes [typescript definitions](types/index.d.ts), check them out to learn about the full API.
@@ -83,4 +104,4 @@ describe('Feature', () => {
 
 ## Sandbox project
 
-To see a working example, check out this project with a bare-bones Laravel application using this package with tests running on CI: [laravel-cypress-sandbox](https://github.com/NoelDeMartin/laravel-cypress-sandbox/).
+To see a working example with different use-cases, check out the following project: [laravel-cypress-sandbox](https://github.com/NoelDeMartin/laravel-cypress-sandbox/).

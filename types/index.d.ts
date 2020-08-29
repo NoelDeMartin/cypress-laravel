@@ -12,7 +12,7 @@ declare global {
 
     namespace Cypress {
 
-        interface Chainable<Subject> {
+        interface Chainable {
 
             create<M extends Model = any>(
                 modelClass: string,
