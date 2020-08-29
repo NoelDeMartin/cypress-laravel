@@ -12,7 +12,8 @@
     "build": "rm dist -rf && npm run build-umd && npm run build-common && npm run build-esm",
     "build-umd": "cross-env NODE_ENV=production TARGET_BUILD=umd webpack --mode='production' --no-progress --hide-modules",
     "build-common": "cross-env NODE_ENV=production TARGET_BUILD=commonjs webpack --mode='production' --no-progress --hide-modules",
-    "build-esm": "cross-env NODE_ENV=production TARGET_BUILD=esmodule webpack --mode='production' --no-progress --hide-modules"
+    "build-esm": "cross-env NODE_ENV=production TARGET_BUILD=esmodule webpack --mode='production' --no-progress --hide-modules",
+    "publish-dev": "scripts/publish-dev.sh"
   },
   "repository": {
     "type": "git",
