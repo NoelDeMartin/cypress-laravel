@@ -14,6 +14,10 @@ declare global {
 
     namespace Cypress {
 
+        interface ConfigOptions {
+            laravelPluginsRegistered: boolean;
+        }
+
         interface Chainable<Subject> extends CustomCommands {
 
             create<M extends Model = any>(model: string, attributes?: any): Cypress.Chainable<M>;

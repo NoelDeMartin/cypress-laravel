@@ -22,6 +22,20 @@ useCypressLaravel();
 // ...
 ```
 
+### Swapping env files
+
+If you want to use a specific environment file to run Cypress tests, you can create a `.env.cypress` file in your Laravel application and it will be swapped when the tests are running.
+
+For this to work properly, Cypress should be installed in the root of the Laravel application. Additionally, you should register the plugin in your `cypress/plugins/index.js` file like this:
+
+```js
+module.exports = (on, config) => {
+    require('cypress-laravel/plugins')(on, config);
+
+    return config;
+};
+```
+
 ### Custom Laravel url
 
 By default, the plugin assumes that the frontend under test is being served on the same domain as the laravel application.

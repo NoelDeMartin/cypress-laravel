@@ -5,6 +5,11 @@ export function useCypressLaravel() {
         Cypress.Commands.add(command, (customCommands as any)[command]);
     }
 
+    if (Cypress.config('laravelPluginsRegistered')) {
+        before(() => cy.task('activateCypressEnvFile'));
+        after(() => cy.task('restoreBackupEnvFile'));
+    }
+
     beforeEach(() => cy.setup());
 }
 
