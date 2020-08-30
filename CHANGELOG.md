@@ -2,8 +2,8 @@
 
 - Improved Cypress command logs.
 - Added tasks to [swap environment files](https://github.com/NoelDeMartin/cypress-laravel/tree/v0.2.0#swapping-env-files) automatically.
-- [[Issue]](https://github.com/NoelDeMartin/cypress-laravel/issues/5) Added configuration options to [customize the laravel url](https://github.com/NoelDeMartin/cypress-laravel/tree/v0.2.0#custom-laravel-url). Thanks [@lucaspottersky](https://github.com/lucaspottersky)!
-- [[Issue]](https://github.com/NoelDeMartin/cypress-laravel/issues/3) Added helpers to [define custom commands](https://github.com/NoelDeMartin/cypress-laravel/tree/v0.2.0#define-your-own-commands).
+- [#3](https://github.com/NoelDeMartin/cypress-laravel/issues/3) Added helpers to [define custom commands](https://github.com/NoelDeMartin/cypress-laravel/tree/v0.2.0#define-your-own-commands).
+- [#5](https://github.com/NoelDeMartin/cypress-laravel/issues/5) Added configuration options to [customize the laravel url](https://github.com/NoelDeMartin/cypress-laravel/tree/v0.2.0#custom-laravel-url). Thanks [@lucaspottersky](https://github.com/lucaspottersky)!
 
 # v0.1.0
 
