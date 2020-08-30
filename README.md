@@ -98,6 +98,34 @@ Call an [artisan command](https://laravel.com/docs/7.x/artisan).
 cy.artisan('migrate:fresh');
 ```
 
+### Define your own commands
+
+If you need a command that isn't included in this package, you can define it using some helpers.
+
+In the Laravel app, register the command in a Service Provider:
+
+```php
+public function boot() {
+    Cypress::command('greet', function (string $name) {
+        return "Hello $name!";
+    });
+}
+```
+
+And declare it in your Cypress setup file:
+
+```js
+useCypressLaravel({ commands: ['greet'] });
+```
+
+You can call custom commands in the same way that you call other commands:
+
+```js
+cy.greet('Guest').then(greeting => {
+    expect(greeting).to.equal('Hello Guest!');
+});
+```
+
 ## Functions
 
 ### useDatabaseMigrations
