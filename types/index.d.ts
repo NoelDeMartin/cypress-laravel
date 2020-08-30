@@ -8,6 +8,10 @@ interface User extends Model {
     email: string;
 }
 
+interface CypressLaravelOptions {
+    commands: string[];
+}
+
 declare global {
 
     namespace Cypress {
@@ -29,6 +33,6 @@ declare global {
 
 }
 
-export function useCypressLaravel(): void;
+export function useCypressLaravel(options?: Partial<CypressLaravelOptions>): void;
 
 export function useDatabaseMigrations(): void;

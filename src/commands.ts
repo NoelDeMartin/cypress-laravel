@@ -19,6 +19,36 @@ const customCommands = {
         });
     },
 
+    laravelCypressCommand<R = any>(command: string, ...args: any[]): Cypress.Chainable<R> {
+        return cy
+            .csrfToken()
+            .then(
+                csrfToken => cy
+                    .laravelCypressRequest('command', {
+                        method: 'POST',
+                        body: {
+                            _token: csrfToken,
+                            command,
+                            arguments: args,
+                        },
+                        log: false,
+                    })
+                    .its('body', { log: false }),
+            )
+            .then(result => {
+                Cypress.log({
+                    name: command,
+                    message: args,
+                    consoleProps: () => ({
+                        arguments: args,
+                        yielded: result,
+                    }),
+                });
+
+                return result;
+            });
+    },
+
     setup(): void {
         Cypress.log({ name: 'setup' });
 
