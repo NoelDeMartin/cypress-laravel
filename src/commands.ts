@@ -151,25 +151,31 @@ const customCommands = {
         cy.laravelCypressRequest(`logout/${guard}`, { log: false });
     },
 
-    artisan(command: string, parameters?: object): void {
-        Cypress.log({
-            name: 'artisan',
-            message: [command, parameters],
-            consoleProps: () => ({ command, parameters })
-        });
+    artisan<T = any>(command: string, parameters?: object): Cypress.Chainable<T> {
+        return cy
+            .csrfToken()
+            .then(
+                csrfToken =>
+                    cy.laravelCypressRequest('call_artisan', {
+                        method: 'POST',
+                        body: {
+                            _token: csrfToken,
+                            command,
+                            parameters,
+                        },
+                        log: false,
+                    })
+                    .its('body', { log: false }),
+            )
+            .then(result => {
+                Cypress.log({
+                    name: 'artisan',
+                    message: [command, parameters],
+                    consoleProps: () => ({ command, parameters, yielded: result }),
+                });
 
-        cy.csrfToken().then(
-            csrfToken =>
-                cy.laravelCypressRequest('call_artisan', {
-                    method: 'POST',
-                    body: {
-                        _token: csrfToken,
-                        command,
-                        parameters,
-                    },
-                    log: false,
-                }),
-        );
+                return result;
+            });
     },
 
 };

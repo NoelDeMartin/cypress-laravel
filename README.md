@@ -92,10 +92,18 @@ cy.logout();
 
 ### artisan
 
-Call an [artisan command](https://laravel.com/docs/7.x/artisan).
+Call an [artisan command](https://laravel.com/docs/artisan).
 
 ```js
 cy.artisan('migrate:fresh');
+```
+
+This yields the output of the artisan command, so it can be used to get json output of some commands, for example:
+
+```js
+cy.artisan('route:list --json').then(routes => {
+    // `routes` will be an array of objects.
+});
 ```
 
 ### Define your own commands
