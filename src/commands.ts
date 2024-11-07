@@ -10,7 +10,7 @@ type LaravelCypressRequestOptions = Omit<Cypress.RequestOptions, 'url'>;
 
 const customCommands = {
 
-    laravelCypressRequest(path: string, options: Partial<LaravelCypressRequestOptions> = {}): Cypress.Chainable<Cypress.Response> {
+    laravelCypressRequest(path: string, options: Partial<LaravelCypressRequestOptions> = {}): Cypress.Chainable<Cypress.Response<any>> {
         const laravelUrl = Cypress.env('LARAVEL_URL') ?? Cypress.env('laravelUrl') ?? '';
 
         return cy.request({
